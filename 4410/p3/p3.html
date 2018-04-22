@@ -1,0 +1,125 @@
+<DOCTYPE html>
+<html>
+<head>
+    <title> Message Board </title>
+    <style>
+	div#anim {
+		width: 100px;
+		height: 100px;
+		background-color: red;
+		position: relative;
+		animation-name: example;
+		animation-duration: 4s;
+		animation-iteration-count: 2;
+		animation-direction: alternate-reverse;
+        border-radius: 55px;    
+	}
+
+	/* Standard syntax */
+	@keyframes example {
+	    0%   {background-color:red; left:0px; top:0px;}
+	    50%  {background-color:blue; left:200px; top:0px;}
+        100% {background-color:green; left:0px; top:0px;}
+	}
+
+    </style>
+	<script>
+	function sendData(){
+		// get values
+		var name = document.querySelector( 'input[name="name"]' ).value;
+		var message = document.querySelector( 'input[name="message"]' ).value;
+		var http = new XMLHttpRequest();
+		var url = 'cgi-bin/serv.py';
+		var params = "name="+name+"&message="+message;
+		http.open( "POST", url, true );
+        
+        // set correct header 
+		http.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
+		
+        // On response, append to the list
+        http.onreadystatechange = function() {
+		    if( http.readyState == 4 && http.status == 200 ) {
+                var ul = document.querySelector( '#message-div' );  
+                var new_li = document.createElement( 'LI' );
+                var txt = document.createTextNode( http.responseText );
+                new_li.appendChild( txt );
+                ul.appendChild( new_li );
+            }
+		}
+		http.send( params );
+	}
+
+    function getData(){
+
+        var http = new XMLHttpRequest();
+        http.open( 'GET', 'data.txt' );
+        http.onreadystatechange = function() {
+            if( http.readyState == 4 && http.status == 200 ) {
+                var logs = http.responseText;
+                var prev_div = document.querySelector( '#prev-messages' );
+                prev_div.innerHTML += logs;
+            }
+        }
+        http.send();
+    }
+    // On load, add event listener to button then get all messages
+	document.addEventListener( 'DOMContentLoaded', function() {
+		document.querySelector( 'input#data' ).addEventListener( 'click', function( e ){
+		    e.preventDefault();
+            // If the name is set, set hte session storage var
+            var name = document.querySelector( 'input[name="name"]' );
+            if ( name.value != '' ){
+                sessionStorage.setItem("stored_name", name.value );
+                name.style.background = 'white';
+                sendData();
+            } else {
+                var saved_name = sessionStorage.getItem( 'stored_name' );
+                if ( saved_name == null ){
+                    var name = document.querySelector( 'input[name="name"]' ).style.background = 'red';
+                    document.querySelector( '#error-box' ).innerHTML = '<b>Name must be set</b>';
+                    return;
+                }else {
+                    name.value = saved_name;
+                    name.style.background = 'white';
+                    sendData();
+                }  
+            }
+		});
+
+        // clear session
+        document.querySelector( 'input#clear_session' ).addEventListener( 'click', function( e ){
+            e.preventDefault();
+            sessionStorage.clear();
+        });
+        getData();    
+    
+	});
+
+	</script>
+</head>
+<body>
+    <h2>Message Board</h2>
+    <p>- Past messages will be retreived on page load. New messages will be posted below.</p>
+    <p>- When a message is first sent, the name is saved in the broser session object. It can be delete with the button</p>
+    <div style="text-align:center;font-size:10px;font-family:Arial;line-height:50px;color:white;" id="anim">Aaron's Message Board</div>
+    <div id="error-box">    
+    </div>
+    <div>
+		<form id="infoForm">
+	  		Name: <input type="text" name="name"><br>
+	  		Message: <input type="text" name="message"><br>
+	  		<input type="submit" id="data" value="Submit"><br>
+	  		<input type="submit" id="clear_session" value="Clear Session Storage"><br>
+		</form>
+	</div>
+    <div id="prev-messages">
+        <h2>Past Messages</h2>
+    </div>
+	<div>
+		<h2>Posted Messages</h2>
+		<ul id="message-div">
+           
+		</ul>
+	</div>
+</body>
+</html>

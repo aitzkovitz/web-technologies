@@ -1,0 +1,123 @@
+<!doctype>
+<html>
+<!-- Aaron Itzkovitz 	-->
+<!-- Dr. Butler 		-->
+<!-- CSCI 4410 AWT 		-->
+<!-- 2/13/2017 			-->
+<!-- AWT Project 2 		-->
+	<head>
+		<style>
+			.icon:hover{
+				color: white;
+			}
+			span.section-title:hover{
+				color: white;
+			}
+			img.collapse-btn:hover{
+				opacity: .5;
+			}
+			.grid-container {
+	  			display: grid;
+	  			background-color: #B0AEAC;
+	  			grid-gap: 1px;
+	  			grid-template-columns: 3% 3% 14% 63% 14% 3%;
+	  			grid-template-rows: 75% 21% 4%;
+	  			border: 4px solid gray;
+	  			height: 100%;
+			}
+			.section-title{
+				font-weight: bold;
+				letter-spacing: 2px;
+				text-align: center;
+			}
+			.collapse-btn{
+				width:17px;
+				height:17px;
+			}
+			.grid-item {
+				font-size: 15px;
+				line-height: 30px;
+				font-family: Arial, Helvetica;
+				text-align: center;
+			}
+			.left-collapse{
+				grid-column: 2 / 3!important;
+				writing-mode: vertical-rl!important;
+  				text-orientation: upright!important;
+  				text-align: left!important;
+			}
+			.right-collapse{
+				grid-column: 6 / 7!important;
+				writing-mode: vertical-rl!important;
+  				text-orientation: upright!important;
+  				text-align: left!important;
+			}
+			.bottom-collapse{
+				grid-row: 3 / 4!important;
+			}
+			#left {
+				background-color: #757577;
+				grid-column: 2 / 4;
+				grid-row: 1 / 4;
+			}
+			#top {
+				background-color: #B0AEAC;
+				grid-column: 4 / 5;
+				grid-row: 1 / 2;
+			}
+			#bottom {
+				background-color: #565858;
+				grid-column: 3 / 6;
+				grid-row: 2 / 4;
+			}
+			#right {
+				background-color: #757577;
+				grid-row: 1 / 4;
+				grid-column: 5 / 7;
+			}
+		</style>
+		<script>
+			function attachListeners(){
+				// grab each section
+				var collapseBtns = document.querySelectorAll('.section-title, .collapse-btn');
+				console.log( collapseBtns );
+				for ( var i = 0; i < collapseBtns.length; i++ ){
+					collapseBtns[i].onclick = function( e ){
+						e.target.parentNode.classList.toggle( e.target.parentNode.id + '-collapse' );
+					};
+				}
+			}
+			window.onload = attachListeners;
+		</script>
+
+	</head>
+	<body>
+		<div class="grid-container">
+			<div class="grid-item" id="side-bar">
+				<div class="icon">&larr;</div>
+				<div class="icon">&uarr;</div>
+				<div class="icon">&rarr;</div>
+				<div class="icon">&darr;</div>
+				<div class="icon">&harr;</div>
+				<div class="icon">&#8597;</div>
+				<div class="icon">&#8598;</div>
+			</div>
+			<div class="grid-item" id="bottom">
+				<img class="collapse-btn" src="collapse_btn.png" />
+				<span class="section-title">ASSETS</span>
+			</div>
+			<div class="grid-item" id="left">
+				<img class="collapse-btn" src="collapse_btn.png" />
+				<span class="section-title">HIERARCHY</span>
+			</div>
+			<div class="grid-item" id="top">
+				<img class="collapse-btn" src="collapse_btn.png" />
+				<span class="section-title">BUILD</span>
+			</div>
+			<div class="grid-item" id="right">
+				<img class="collapse-btn" src="collapse_btn.png" />
+				<span class="section-title">INSPECTOR</span>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,170 @@
+<html>    
+    <head>
+        <script>
+            document.addEventListener( "DOMContentLoaded", addDragListeners );
+            function addDragListeners( e ){
+                var dropzone = document.getElementById( 'dropzone' );
+                var dragOverListener = function( e ){
+                    e.preventDefault();
+                    console.log( 'drag over or enter' );
+                };
+                var dropListener = function( e ){
+                    
+                    e.preventDefault();
+
+                    // get files
+                    var files = e.dataTransfer.files;
+                    var formData = new FormData();
+                    for( var i = 0; i < files.length; i++ ){
+                        formData.append( 'file', files[i] );
+                    }
+                    formData.append( 'mthd', 'ajax' );
+                    // Use XHR to upload.
+                    var xhr = new XMLHttpRequest();
+                    xhr.open( 'POST', 'cgi-bin/uploader.py' );
+                    xhr.onload = function () {
+                        if (xhr.status === 200) {
+                            console.log('all done: ' + xhr.responseText);
+                        } else {
+                            console.log('Something went terribly wrong...');
+                        }
+                    };
+                    xhr.send(formData);
+                }
+                dropzone.ondragover = dragOverListener;
+                dropzone.ondragenter = dragOverListener;
+                dropzone.ondrop = dropListener;
+
+            }
+        </script>
+	    <style>
+            #dropzone {
+                  border: 5px solid blue;
+                  width:  200px;
+                  height: 100px;
+            }
+            .section{
+                padding-top: 15px;
+                padding-bottom: 25px;
+
+            }
+            details details{
+                padding-top: 5px;
+                padding-left: 12px;
+                padding-bottom:5px;
+            }
+            details{
+                background-color: #42ebf4;
+            }
+
+        </style>
+
+    </head>
+    <body>
+        <div id="title" class="section">
+            <h2>Aaron's Media Library</h2>
+        </div>
+        <div id="info" class="section">
+            <p>This is an interactive media library made for project 4. You can upload files to the library or download videos which are currently displayed from the library.
+        </div>
+        <div id="content" class="section">
+            <details>
+                <summary>Unity 3D Demos</summary>
+                Author: Aaron Itzkovitz
+                <details>
+                    <summary>Unity 3D Cubes</summary>
+                    Some more content on unity cubes</br>
+                    <video width="320" height="240" controls>
+                        <source src="uploads/u3dRedCube.mp4">
+                    </video></br>
+                    <a href="uploads/u3dRedCube.mp4" download="Unity Red Cube">Download Vid</a></br>
+                    <hr></br>
+
+                    <video width="320" height="240" controls>
+                        <source src="uploads/u3dGreenCube.mp4">
+                    </video></br>
+                    <a href="uploads/u3dGreenCube.mp4" download="Unity Green Cube">Download Vid</a></br>
+                    <hr></br>
+
+                    <img src="uploads/u3dGreenCube.png"/></br>
+                    <a href="uploads/u3dGreenCube.png" download="Unity Green Cube">Download Pic</a></br>
+                    <hr></br>
+
+					<img src="uploads/u3dRedCube.png"/></br>
+                    <a href="uploads/u3dRedCube.png" download="Unity Red Cube">Download Pic</a></br>
+                    </br>
+                </details>
+                <details>
+                    <summary>Unity 3D Spheres</summary>
+                    Some more content on unity spheres
+
+                    <video width="320" height="240" controls>
+                        <source src="uploads/u3dGreenSphere.mp4">
+                    </video></br>
+                    <a href="uploads/u3dGreenSphere.mp4" download="Unity Green Sphere">Download Vid</a></br>
+                    <hr></br>
+
+                    <video width="320" height="240" controls>
+                        <source src="uploads/u3dRedSphere.mp4">
+                    </video></br>
+                    <a href="uploads/u3dRedSphere.mp4" download="Unity Red Sphere">Download Vid</a></br>
+                    <hr></br>
+
+                    <img src="uploads/u3dRedSphere.png"/></br>
+                    <a href="uploads/u3dRedSphere.png" download="Unity Red Sphere">Download Pic</a></br>
+                    <hr></br>
+
+					<img src="uploads/u3dGreenSphere.png"/></br>
+                    <a href="uploads/u3dGreenSphere.png" download="Unity Green Sphere">Download Pic</a></br>
+                    </br>
+
+                </details>
+            </details>                
+            <details>                                   
+                <summary>Maya Demos</summary>                
+                Author: Aaron Itzkovitz
+                <details>
+                    <summary>Maya Cubes</summary>
+                    More content about Maya Cubes
+                    <video width="320" height="240" controls>
+                        <source src="uploads/mayaCube.mp4">
+                    </video></br>
+                    <a href="uploads/mayaCube.mp4" download="Maya Cube">Download Vid</a></br>
+                    <hr></br>
+
+                    <img src="uploads/mayaCube.png"/></br>
+                    <a href="uploads/mayaCube.png" download="Maya Cube">Download Pic</a></br>
+                    <hr></br>
+                </details>
+                <details>
+                    <summary>Maya Spheres</summary>
+                    More content about maya spheres
+                    <video width="320" height="240" controls>
+                        <source src="uploads/mayaSphere.mp4">
+                    </video></br>
+                    <a href="uploads/mayaSphere.mp4" download="Maya Sphere">Download Vid</a></br>
+                    <hr></br>
+
+                    <img src="uploads/mayaSphere.png"/></br>
+                    <a href="uploads/mayaSphere.png" download="Maya Sphere">Download Pic</a></br>
+                    <hr></br>
+                </details>
+            </details>
+        </div>
+        <div id="dropzone" class="section">
+            <p>Drag and drop a file into this box to upload!</p>
+        </div>
+        <div id="file-select" class="section">
+            <form method="post" action="cgi-bin/uploader.py" enctype="multipart/form-data">
+                 <div>
+                    <label for="file">Choose file to upload</label>
+                    <input type="file" id="file" name="file" multiple>
+                    <input type="hidden" name="mthd" value="form">
+                </div>
+                <div>
+                    <button>Submit</button>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

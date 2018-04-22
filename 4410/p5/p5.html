@@ -1,0 +1,101 @@
+<!doctype html>
+<!-- Aaron Itzkovitz -->
+<!-- CSCI 4410 -->
+<!-- 4/9/18 -->
+<!-- Proj 5 -->
+<html>
+<head>
+	<title>AWT P5</title>
+	<style>
+		body{
+			letter-spacing: 2px;
+		}
+	</style>
+	<script>
+
+		function is_inside( x, y, radius ){
+			let dist, xdiff, ydiff;
+			xdiff = x - ( radius );
+			ydiff = y - ( radius );
+			dist = Math.sqrt( ( xdiff * xdiff ) + ( ydiff * ydiff ) );
+			//console.log( 'is inside: ' + x + ' ' + y + ' dist: ' + dist );
+			if ( dist < radius ){ return true; }
+			return false;
+
+		}
+
+		function renderResult(){
+			var audio = document.getElementById( 'audio' );
+			var inside_darts = 0;
+			// get values
+			let size = document.getElementById( 'dims' ).value;
+			let dart_num = document.getElementById( 'darts_num' ).value;
+			let dart_area = document.getElementById( 'dart_area' );
+			let radius = size / 2;
+			let newX, newY, pi;
+
+			// check vals
+			if ( dart_num > 900 || dart_num < 300 || size < 300 || size > 900 ){
+				alert( 'Values must be between 300 and 900' );
+				return;
+			}
+
+			// resize canvas
+			dart_area.width = dart_area.height = size;
+			dart_area.style.display = 'block';
+			// begin drawing darts
+			let ctx = dart_area.getContext( '2d' );
+			ctx.fillStyle = 'blue';
+
+			// Draw initial circle.
+			ctx.beginPath();
+			ctx.arc( radius, radius, radius, 0, 2 * Math.PI );
+			ctx.stroke();
+
+
+			for ( var i = 0; i < dart_num; i++ ){
+				
+				// Compute random spot
+				newX = Math.floor( Math.random() * size );
+				newY = Math.floor( Math.random() * size );
+
+				// If it is inside the circle, add to array
+				if ( is_inside( newX, newY, radius ) ){ inside_darts++; }
+
+				// Actually draw the point.
+				ctx.beginPath();
+				ctx.arc( newX, newY, 3, 0, 2 * Math.PI );
+				ctx.fill();
+
+			}
+			
+			pi = ( inside_darts / dart_num ) * 4;
+			document.getElementById( 'pi_div' ).innerHTML = 'Pi estimate is: ' + pi;
+			audio.play();
+
+		}
+
+		window.addEventListener( 'DOMContentLoaded', function(e){
+			let fire = document.getElementById( 'fire' );
+			fire.onclick = renderResult;
+
+		});
+	</script>
+</head>
+<body>
+	<div id="canvas_div">
+		<canvas style="display:none;" id="dart_area"></canvas>
+	</div>
+	<div id="controls_div">
+		<label for="male">Enter the size of the canvas.</label>
+		<input type="number" step="100" min="300" max="900" id="dims" /> </br></br>
+		<label for="darts_num">Enter the number of darts.</label>
+		<input type="number" step="100" min="300" max="900" id="darts_num" /></br></br>
+		<input type="button" id="fire" value="Fire!" />
+	</div><br/>
+	<div id="pi_div"></div>
+	<div>
+		<audio id="audio" src="gunshot.wav"></audio>
+	</div>
+</body>
+</html>
